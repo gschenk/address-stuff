@@ -49,10 +49,70 @@ def addr_entry(key):
     return line
 
 
+def get_handle():
+    """offers a handle for an entry, checks if used"""
+
+    trial = entries["familyName"] + '_' + entries["givenName"]
+    if not check_handle(trial):
+        if query_acceptance(trial):
+            print("\n")
+            return trial
+    else:
+        print("Handle already in use. You might want "
+              + "to check if an entry for this person "
+              + "already exists.")
+
+    handle = input("No automatic handle was chosen"
+                   + "try to write one yourself:"
+                   )
+    print("The entry will be stored at:"
+          + get_path_filename(handle) + "\n")
+    return handle
+
+
+def query_acceptance(trial):
+    """ ask the user if they accept the handle and filename"""
+    ys = ['y', 'Y']
+    ns = ['n', 'N']
+    yns = ys + ns
+    a = ''
+
+    while a not in yns:
+        a = input(
+            "Would you like to use "
+            + trial
+            + " as handle (stored in: '"
+            + get_path_filename(trial)
+            + "' " + str(yns) + "? "
+        )
+
+    if a in ys:
+        return True
+    if a in ns:
+        return False
+
+
+def get_path_filename(handle):
+    """ cleans path, combines it"""
+    path = jsonPath.strip('/').strip()
+    return path + '/' + handle + '.json'
+
+
+def check_handle(handle):
+    """checks if a filename is already in use"""
+    import os
+    return os.path.isfile(get_path_filename(handle))
+
+
+# MAIN
+
+jsonPath = './addresses/'
+jsonExtension = '.json'
+
 # define strings for json keys
 entries = {
-    "firstName": "",
-    "lastName": "",
+    "givenName": "",
+    "familyName": "",
     "nameLanguage": "",
     "moreNames": "",
     "academicDegrees": "",
@@ -68,18 +128,22 @@ entries = {
 }
 
 # some special keys
-mandatory_keys = ['firstName', 'lastName', 'nameLanguage']
+mandatory_keys = ['familyName', 'givenName', 'nameLanguage']
 
 
 # get necessary entries
 for key in mandatory_keys:
     value = ''
-    if key != 'lng':
+    if key != 'nameLanguage':
         while not value:
             value = addr_entry(key)
         entries[key] = value
     else:
         entries[key] = addr_lang(key)
+
+
+# find a file name
+handle = get_handle()
 
 
 # get the bulk of the data
@@ -97,8 +161,6 @@ for key in dict.keys(entries):
 for key in empty_keys:
     del entries[key]
 
-
-# with open('result.json', 'w') as fp:
-#        json.dump(sample, fp)
-
-print(json.dumps(entries, indent=4, sort_keys=True))
+outfile = get_path_filename(handle)
+with open(outfile, 'w') as fp:
+        json.dump(entries, fp, indent=4, sort_keys=True)
