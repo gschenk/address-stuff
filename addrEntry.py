@@ -22,7 +22,7 @@ def addr_entry(key):
 
     # getting the input
     rawline = input(
-        'please enter ' + jkeys[key] + ': '
+        'please enter ' + key + ': '
     )
 
     # get rid of trailing whitespace, abbr points
@@ -50,28 +50,25 @@ def addr_entry(key):
 
 
 # define strings for json keys
-jkeys = {
-    'fn': "firstName",
-    'ln': "lastName",
-    'lng': "nativeLanguage",
-    'mn': "moreNames",
-    'acd': "academicDegrees",
-    'aca': "academicDegreeInSalutation",
-    'sal': "styleInSalutation",
-    'cmp': "companyName",
-    'sno': "houseNumber",
-    'str': "street",
-    'cty': "city",
-    'poc': "postalCode",
-    'box': "postBox",
-    'ctr': "country",
+entries = {
+    "firstName": "",
+    "lastName": "",
+    "nameLanguage": "",
+    "moreNames": "",
+    "academicDegrees": "",
+    "academicDegreeInSalutation": "",
+    "styleInSalutation": "",
+    "companyName": "",
+    "houseNumber": "",
+    "street": "",
+    "city": "",
+    "postalCode": "",
+    "postBox": "",
+    "country": "",
 }
 
 # some special keys
-mandatory_keys = ['fn', 'ln', 'lng']
-
-# empty copy of the keys
-jvals = dict.fromkeys(dict.keys(jkeys))
+mandatory_keys = ['firstName', 'lastName', 'nameLanguage']
 
 
 # get necessary entries
@@ -80,42 +77,28 @@ for key in mandatory_keys:
     if key != 'lng':
         while not value:
             value = addr_entry(key)
-        jvals[key] = value
+        entries[key] = value
     else:
-        jvals[key] = addr_lang(key)
+        entries[key] = addr_lang(key)
 
 
 # get the bulk of the data
 empty_keys = []
-for key in dict.keys(jkeys):
+for key in dict.keys(entries):
     # some necessary entries are done elsewhere
     if key not in mandatory_keys:
-        jvals[key] = addr_entry(key)
+        entries[key] = addr_entry(key)
 
         # add empty entries on list to be removed
-        if not jvals[key]:
+        if not entries[key]:
             empty_keys.append(key)
 
 # remove empty keys from list
 for key in empty_keys:
-    del jkeys[key]
-    del jvals[key]
+    del entries[key]
 
 
-
-#with open('result.json', 'w') as fp:
+# with open('result.json', 'w') as fp:
 #        json.dump(sample, fp)
 
-
-# json structure
-jsonStr = json.dumps(
-    {
-        jkeys['ln']: jvals['ln'],
-        jkeys['fn']: jvals['fn']
-    },
-    sort_keys=True,
-    indent=4
-)
-
-
-print(jsonStr)
+print(json.dumps(entries, indent=4, sort_keys=True))
