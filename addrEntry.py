@@ -15,6 +15,7 @@ def addr_lang(key):
         if line not in known:
             line = ''
             print("Language key unknown.")
+    return line
 
 
 def addr_entry(key):
@@ -33,7 +34,7 @@ def addr_entry(key):
 
     # remove forbidden strings
     trans_tab = dict.fromkeys(
-        map(ord, '\"\'!@#$\\\/'), None
+        map(ord, '.\"\'!@#$\\\/'), None
     )
 
     line = line.translate(trans_tab)
@@ -114,31 +115,31 @@ entries = {
     "givenName": "",
     "familyName": "",
     "nameLanguage": "",
-    "moreNames": "",
-    "academicDegrees": "",
-    "academicDegreeInSalutation": "",
-    "styleInSalutation": "",
-    "companyName": "",
-    "houseNumber": "",
-    "street": "",
-    "city": "",
-    "postalCode": "",
-    "postBox": "",
-    "country": "",
+    "theAddress": {
+        "moreNames": "",
+        "academicDegrees": "",
+        "academicDegreeInSalutation": "",
+        "styleInSalutation": "",
+        "companyName": "",
+        "houseNumber": "",
+        "street": "",
+        "city": "",
+        "postalCode": "",
+        "postBox": "",
+        "country": "",
+    }
 }
-
-# some special keys
-mandatory_keys = ['familyName', 'givenName', 'nameLanguage']
 
 
 # get necessary entries
-for key in mandatory_keys:
+for key in dict.keys(entries):
     value = ''
-    if key != 'nameLanguage':
+    if key != 'nameLanguage' and key != 'theAddress':
         while not value:
             value = addr_entry(key)
         entries[key] = value
-    else:
+
+    if key == 'nameLanguage':
         entries[key] = addr_lang(key)
 
 
@@ -148,18 +149,16 @@ handle = get_handle()
 
 # get the bulk of the data
 empty_keys = []
-for key in dict.keys(entries):
-    # some necessary entries are done elsewhere
-    if key not in mandatory_keys:
-        entries[key] = addr_entry(key)
+for key in dict.keys(entries['theAddress']):
+    entries['theAddress'][key] = addr_entry(key)
 
-        # add empty entries on list to be removed
-        if not entries[key]:
-            empty_keys.append(key)
+    # add empty entries on list to be removed
+    if not entries['theAddress'][key]:
+        empty_keys.append(key)
 
 # remove empty keys from list
 for key in empty_keys:
-    del entries[key]
+    del entries['theAddress'][key]
 
 outfile = get_path_filename(handle)
 with open(outfile, 'w') as fp:
