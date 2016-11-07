@@ -1,4 +1,9 @@
-import yaml
+# This script expects an address handle as an argument
+# this handle corresponds to the file names of the
+# address entries without extension.
+
+from yaml import load, YAMLError
+from sys import argv
 
 # path to the configuration file
 cfgfile = 'address.cfg'
@@ -11,6 +16,7 @@ def get_path_filename(handle):
     path = yamlPath.strip('/').strip()
     return path + '/' + handle + yamlExtension
 
+# MAIN
 
 # read the configuration file, wherin paths, data
 # structures and keys of the yaml input are defined.
@@ -19,10 +25,54 @@ with open(cfgfile) as f:
         exec(code)
 
 
+# get commandline argument
+for idx, arg in enumerate(argv[1:]):
+    if idx == 0:
+        handle = arg
+    if idx == 1:
+        print("Only the first argument is considered. "
+             + "Here I dump the rest. "
+             + "After that I shall exit disgracefully."
+             )
+    if idx >= 1:
+        print(arg, "\n")
+
+# Do exit disgracefully.
+if idx > 0:
+    print("I told you so!")
+    exit(1)
+
+
+# check for and strip extensions
+if yamlExtension in handle:
+    print("Please avoid extensions ("
+          + yamlExtension
+          + ") in the handle. "
+          + "I shall proceed to strip it now."
+         )
+    handle = handle.strip(yamlExtension)
+
+# some chars must not be in a valid handle
+forbidden = ['/','\\','*']
+for c in forbidden:
+    if c in handle:
+        print("This character cannot be in "
+              + "a valid handle: "
+              + c
+              + "\nAlas, how far I came, "
+              + "yet I must perish."
+             )
+        exit(2)
+
+
 # read address entries from yaml
 infile = get_path_filename(handle)
 with open(infile, 'r') as fp:
-        entries = yaml.load(fp)
+    try:
+        entries = load(fp)
+    except YAMLError as exc:
+        print(exc)
+        exit(3)
 
 
 # what follows is only an example, print to stdout
