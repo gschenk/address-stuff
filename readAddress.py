@@ -38,6 +38,13 @@ for idx, arg in enumerate(argv[1:]):
         print(arg, "\n")
 
 # Do exit disgracefully.
+if 'idx' not in locals():
+    print("An argument is required, "
+          + "it should specify the handle of "
+          + " the address entry.")
+    print("Oh dear, is this the end? Yes, indeed.")
+    exit(5)
+
 if idx > 0:
     print("I told you so!")
     exit(1)
