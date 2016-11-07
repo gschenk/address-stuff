@@ -1,4 +1,9 @@
 import json
+import os
+
+
+# path to the configuration file
+filename = 'address.cfg'
 
 
 def addr_lang(key):
@@ -101,34 +106,19 @@ def get_path_filename(handle):
 
 def check_handle(handle):
     """checks if a filename is already in use"""
-    import os
     return os.path.isfile(get_path_filename(handle))
 
 
 # MAIN
 
-jsonPath = './addresses/'
-jsonExtension = '.json'
+# read the configuration file, wherin paths, data
+# structures and keys for the json output are defined.
+jsonPath = ''  # these entirely unecessary statements
+entries = dict()  # exist to appease the syntax checker
 
-# define strings for json keys
-entries = {
-    "givenName": "",
-    "familyName": "",
-    "nameLanguage": "",
-    "theAddress": {
-        "moreNames": "",
-        "academicDegrees": "",
-        "academicDegreeInSalutation": "",
-        "styleInSalutation": "",
-        "companyName": "",
-        "houseNumber": "",
-        "street": "",
-        "city": "",
-        "postalCode": "",
-        "postBox": "",
-        "country": "",
-    }
-}
+with open(filename) as f:
+        code = compile(f.read(), filename, 'exec')
+        exec(code)
 
 
 # get necessary entries

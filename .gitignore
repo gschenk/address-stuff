@@ -1,2 +1,3 @@
 addresses/*
 *.swp
+__pycache__
