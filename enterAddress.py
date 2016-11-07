@@ -3,7 +3,7 @@ import os
 
 
 # path to the configuration file
-filename = 'address.cfg'
+cfgfile = 'address.cfg'
 
 
 def addr_lang(key):
@@ -113,11 +113,9 @@ def check_handle(handle):
 
 # read the configuration file, wherin paths, data
 # structures and keys for the yaml output are defined.
-yamlPath = ''  # these entirely unecessary statements
-entries = dict()  # exist to appease the syntax checker
 
-with open(filename) as f:
-        code = compile(f.read(), filename, 'exec')
+with open(cfgfile) as f:
+        code = compile(f.read(), cfgfile, 'exec')
         exec(code)
 
 
