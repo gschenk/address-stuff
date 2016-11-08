@@ -11,19 +11,23 @@ cfgfile = 'address.cfg'
 # temporary asgt
 handle = 'test_test'
 
+
 def get_path_filename(handle):
     """ cleans path, combines it"""
     path = yamlPath.strip('/').strip()
     return path + '/' + handle + yamlExtension
 
+
 def eprint(argument):
     """ print to stderr """
     sys.stderr.write(argument)
+
 
 # MAIN
 
 # read the configuration file, wherin paths, data
 # structures and keys of the yaml input are defined.
+
 with open(cfgfile) as f:
         code = compile(f.read(), cfgfile, 'exec')
         exec(code)
@@ -35,17 +39,16 @@ for idx, arg in enumerate(sys.argv[1:]):
         handle = arg
     if idx == 1:
         eprint("Only the first argument is considered. "
-             + "Here I dump the rest. "
-             + "After that I shall exit disgracefully."
-             )
+               + "Here I dump the rest. "
+               + "After that I shall exit disgracefully.")
     if idx >= 1:
         eprint(arg + "\n")
 
 # Do exit disgracefully.
 if 'idx' not in locals():
     eprint("An argument is required, "
-          + "it should specify the handle of "
-          + " the address entry.")
+           + "it should specify the handle of "
+           + " the address entry.")
     eprint("Oh dear, is this the end? Yes, indeed.")
     exit(5)
 
@@ -57,22 +60,20 @@ if idx > 0:
 # check for and strip extensions
 if yamlExtension in handle:
     eprint("Please avoid extensions ("
-          + yamlExtension
-          + ") in the handle. "
-          + "I shall proceed to strip it now."
-         )
+           + yamlExtension
+           + ") in the handle. "
+           + "I shall proceed to strip it now.")
     handle = handle.strip(yamlExtension)
 
 # some chars must not be in a valid handle
-forbidden = ['/','\\','*']
+forbidden = ['/', '\\', '*']
 for c in forbidden:
     if c in handle:
         eprint("This character cannot be in "
-              + "a valid handle: "
-              + c
-              + "\nAlas, how far I came, "
-              + "yet I must perish."
-             )
+               + "a valid handle: "
+               + c
+               + "\nAlas, how far I came, "
+               + "yet I must perish.")
         exit(2)
 
 
