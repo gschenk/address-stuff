@@ -31,8 +31,8 @@ def addr_entry(key):
         'please enter ' + key + ': '
     )
 
-    # get rid of trailing whitespace, abbr points
-    line = rawline.rstrip('.').strip()
+    # get rid of trailing whitespace
+    line = rawline.strip()
 
     # replace tabs
     line = line.replace('\t', ' ')
