@@ -29,9 +29,10 @@ def eprint(argument):
 # structures and keys of the yaml input are defined.
 
 with open(cfgfile) as f:
-        code = compile(f.read(), cfgfile, 'exec')
-        exec(code)
+        config = load(f)
 
+yamlExtension = config['yamlExtension']
+yamlPath = config['yamlPath']
 
 # get commandline argument
 for idx, arg in enumerate(sys.argv[1:]):

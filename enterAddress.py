@@ -1,4 +1,4 @@
-from yaml import dump
+from yaml import dump, load
 import os
 
 
@@ -115,8 +115,11 @@ def check_handle(handle):
 # structures and keys for the yaml output are defined.
 
 with open(cfgfile) as f:
-        code = compile(f.read(), cfgfile, 'exec')
-        exec(code)
+        config = load(f)
+
+yamlExtension = config['yamlExtension']
+yamlPath = config['yamlPath']
+entries = config['entries']
 
 
 # get necessary entries
