@@ -100,8 +100,8 @@ def query_acceptance(trial):
 
 def get_path_filename(handle):
     """ cleans path, combines it"""
-    path = yamlPath.strip('/').strip()
-    return path + '/' + handle + yamlExtension
+    path = config['path'].strip('/').strip()
+    return path + '/' + handle + config['extension']
 
 
 def check_handle(handle):
@@ -117,8 +117,6 @@ def check_handle(handle):
 with open(cfgfile) as f:
         config = load(f)
 
-yamlExtension = config['yamlExtension']
-yamlPath = config['yamlPath']
 entries = config['entries']
 
 
